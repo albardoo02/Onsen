@@ -1,0 +1,35 @@
+# Onsen Plugin YamlConfiguration
+# Config Version
+configVersion: 1.1
+# Plugin Prefix
+Prefix: "&7[&e温泉システム&7]&r"
+# Chat Tip Message
+OnsenTip:
+  TipMessage: "&a[温泉機能についてのお知らせ]\n&f-------------------------------\n&e温泉機能が新しくなりました！\n温泉機能の使い方は/onsen spawnで温泉街に移動できます\n詳しくはこのメッセージにカーソルを合わせてね！\n&f-------------------------------"
+  HoverMessage: "&a[温泉機能についてのお知らせ]\n&f-------------------------------\n&6温かな温泉があなたを待っている\n&f温泉街へは&a/onsen spawn&fで行くことができます\n&f温泉リクエストに関しては\n&f温泉を登録したいところに立って\n&a/onsen request 登録したい温泉名\n&fと打つことでリクエストを送信できます\n&f詳しくは&a/onsen help&fで確認しよう！\n&f-------------------------------"
+
+# HelpMessage
+HelpMessage:
+  - '&6======= 温泉コマンドヘルプ ======='
+  - '&e/onsen help &7- &b温泉コマンドのヘルプを表示します'
+  - '&e/onsen menu &7- &b温泉メニューを表示します&c[機能停止中]'
+  - '&e/onsen list &7- &b温泉一覧を送信します'
+  - '&e/onsen info <温泉名> &7- &b指定した温泉の詳細を表示します'
+  - '&e/onsen spawn &7- &b温泉街に移動します'
+  - '&e/onsen spawn <温泉名> &7- &b指定した温泉名に移動します'
+  - '&e/onsen request <設定したい温泉名> &7- &b温泉リクエストを送信します'
+HelpMessageAdmin:
+  - '&6======= 温泉コマンドヘルプ ======='
+  - '&e/onsen help &7- &b温泉コマンドのヘルプを表示します'
+  - '&e/onsen menu &7- &b温泉メニューを表示します&c[機能停止中]'
+  - '&e/onsen list &7- &b温泉一覧を送信します'
+  - '&e/onsen info <温泉名> &7- &b指定した温泉の詳細を表示します'
+  - '&e/onsen spawn &7- &b温泉街に移動します'
+  - '&e/onsen spawn <温泉名> &7- &b指定した温泉名に移動します'
+  - '&e/onsen request <設定したい温泉名> &7- &b温泉リクエストを送信します'
+  - '&e/onsen <accept|deny> <温泉名> &7- &b温泉リクエストを&a承認&7/&c拒否&bします[OP]'
+  - '&e/onsen register <設定したい温泉名> &7- &b立っている場所を温泉を登録します[OP]'
+  - '&e/onsen set spawn <温泉名> &7- &b指定した温泉名の移動先を設定します[OP]'
+  - '&e/onsen set <public|private> <温泉名> &7- &b指定した温泉の公開状況を設定します[OP]'
+  - '&e/onsen delete <温泉名> &7- &b指定した温泉を削除します[OP]'
+  - '&e/onsen reload &7- &bConfigを再読み込みします[OP]'

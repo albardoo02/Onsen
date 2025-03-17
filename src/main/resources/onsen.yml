@@ -1,0 +1,23 @@
+# Onsen List Config
+#温泉一覧
+# Player: 設置者/申請者
+# Status: 公開状況
+# - public: 公開, 移動可能
+# - private: 非公開, 移動不可
+# - unrated: リクエスト審査中, 移動不可
+# - deny: リクエスト却下, 移動不可
+# World: 設置ワールド
+# X: X座標
+# Y: Y座標
+# X: X座標
+OnsenList:
+  #デフォルトの温泉街
+  温泉街:
+    ItemID: "CAMPFIRE"
+    Enchant: true
+    Player: "Admin"
+    Status: "public"
+    World: "world"
+    X: 100
+    Y: 100
+    Z: 100
