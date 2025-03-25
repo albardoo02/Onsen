@@ -206,45 +206,43 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 return true;
             }
             if (args.length == 2) {
-                if (args[1].equalsIgnoreCase(args[1])) {
-                    String path = "OnsenList." + args[1];
-                    if (!onsenConfig.contains(path)) {
-                        sendMessage(player, "&b" + args[1] + "&6という名前の温泉は登録されていません");
-                        return true;
-                    }
-                    String status = onsenConfig.getString(path + ".Status");
-                    if (status == null) {
-                        sendMessage(player, "&c不明なエラーが発生しました");
-                        return true;
-                    }
-                    if (status.equalsIgnoreCase("unrated")) {
-                        sendMessage(player, "&b" + args[1] + "&6はまだ承認されていません");
-                        return true;
-                    }
-                    else if (status.equalsIgnoreCase("deny")) {
-                        sendMessage(player, "&b" + args[1] + "&6はリクエストが却下されため移動できません");
-                        return true;
-                    }
-                    else if (status.equalsIgnoreCase("private")) {
-                        if (!player.hasPermission("onsen.spawn.bypass")) {
-                            sendMessage(player, "&b" + args[1] + "&6は公開されていません");
-                            return true;
-                        }
-                    }
-
-                    World world = Bukkit.getWorld(onsenConfig.getString(path + ".World"));
-                    if (world == null) {
-                        sendMessage(player, "&c移動先のワールドが見つかりません");
-                        return true;
-                    }
-                    int x = onsenConfig.getInt(path + ".X");
-                    int y = onsenConfig.getInt(path + ".Y");
-                    int z = onsenConfig.getInt(path + ".Z");
-
-                    player.teleport(new Location(world, x, y, z));
-                    sendMessage(player, "&b" + args[1] + "&fに移動しました");
+                String path = "OnsenList." + args[1];
+                if (!onsenConfig.contains(path)) {
+                    sendMessage(player, "&b" + args[1] + "&6という名前の温泉は登録されていません");
                     return true;
                 }
+                String status = onsenConfig.getString(path + ".Status");
+                if (status == null) {
+                    sendMessage(player, "&c不明なエラーが発生しました");
+                    return true;
+                }
+                if (status.equalsIgnoreCase("unrated")) {
+                    sendMessage(player, "&b" + args[1] + "&6はまだ承認されていません");
+                    return true;
+                }
+                else if (status.equalsIgnoreCase("deny")) {
+                    sendMessage(player, "&b" + args[1] + "&6はリクエストが却下されため移動できません");
+                    return true;
+                }
+                else if (status.equalsIgnoreCase("private")) {
+                    if (!player.hasPermission("onsen.spawn.bypass")) {
+                        sendMessage(player, "&b" + args[1] + "&6は公開されていません");
+                        return true;
+                    }
+                }
+
+                World world = Bukkit.getWorld(onsenConfig.getString(path + ".World"));
+                if (world == null) {
+                    sendMessage(player, "&c移動先のワールドが見つかりません");
+                    return true;
+                }
+                int x = onsenConfig.getInt(path + ".X");
+                int y = onsenConfig.getInt(path + ".Y");
+                int z = onsenConfig.getInt(path + ".Z");
+
+                player.teleport(new Location(world, x, y, z));
+                sendMessage(player, "&b" + args[1] + "&fに移動しました");
+                return true;
             }
         }
         if (args[0].equalsIgnoreCase("request")) {
@@ -252,7 +250,7 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 sendMessage(player, "&b/onsen request <設定したい温泉名>");
                 return true;
             }
-            if (args[1].equalsIgnoreCase(args[1])) {
+            if (args.length >= 2) {
                 String path = "OnsenList." + args[1];
                 if (onsenConfig.contains(path)) {
                     sendMessage(player, "&b" + args[1] + "&fという名前の温泉は既に登録されています");
@@ -302,7 +300,7 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 String path = "OnsenList." + onsenName;
 
                 if (!onsenConfig.contains(path)) {
-                    sendMessage(player, "&b" + args[2] + "&6という名前の温泉は見つかりません");
+                    sendMessage(player, "&b" + onsenName + "&6という名前の温泉は見つかりません");
                     return true;
                 }
                 onsenConfig.set(path + ".Status","public");
@@ -321,11 +319,11 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 OfflinePlayer ownerPlayer = Bukkit.getOfflinePlayer(playerUuid);
                 String ownerName = ownerPlayer.getName() != null ? ownerPlayer.getName() : "不明なプレイヤー";
 
-                sendMessage(player, "&b" + args[2] + "&fの温泉登録リクエストを&a承認&fしました");
+                sendMessage(player, "&b" + onsenName + "&fの温泉登録リクエストを&a承認&fしました");
 
                 Player onlineOwner = ownerPlayer.getPlayer();
                 if (onlineOwner != null && onlineOwner.isOnline()) {
-                    sendMessage(onlineOwner, "&b" + args[2] + "&fの温泉登録リクエストが&a承認&fされました");
+                    sendMessage(onlineOwner, "&b" + onsenName + "&fの温泉登録リクエストが&a承認&fされました");
                 } else {
                     plugin.getLogger().warning(ownerName + "がオフラインのため通知ができませんでした");
                 }
@@ -370,11 +368,11 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 OfflinePlayer ownerPlayer = Bukkit.getOfflinePlayer(playerUuid);
                 String ownerName = ownerPlayer.getName() != null ? ownerPlayer.getName() : "不明なプレイヤー";
 
-                sendMessage(player, "&b" + args[2] + "&fの温泉登録リクエストを&c拒否&fしました");
+                sendMessage(player, "&b" + onsenName + "&fの温泉登録リクエストを&c拒否&fしました");
 
                 Player onlineOwner = ownerPlayer.getPlayer();
                 if (onlineOwner != null && onlineOwner.isOnline()) {
-                    sendMessage(onlineOwner, "&b" + args[2] + "&fの温泉登録リクエストが&c拒否&fされました");
+                    sendMessage(onlineOwner, "&b" + onsenName + "&fの温泉登録リクエストが&c拒否&fされました");
                 } else {
                     plugin.getLogger().warning(ownerName + "がオフラインのため通知ができませんでした");
                 }
@@ -407,7 +405,7 @@ public class OnsenCommandExecutor implements CommandExecutor {
             String path = "OnsenList." + onsenName;
 
             if (onsenConfig.contains(path)) {
-                sendMessage(player, "&b" + args[1] + "&6という名前の温泉は既に登録されています");
+                sendMessage(player, "&b" + onsenName + "&6という名前の温泉は既に登録されています");
                 return true;
             }
             Location loc = player.getLocation();
@@ -418,7 +416,7 @@ public class OnsenCommandExecutor implements CommandExecutor {
             onsenConfig.set(path + ".Y", loc.getBlockY());
             onsenConfig.set(path + ".Z", loc.getBlockZ());
             plugin.saveOnsenConfig();
-            sendMessage(player, "温泉名を&b" + args[1] + "&fとして登録しました");
+            sendMessage(player, "温泉名を&b" + onsenManager + "&fとして登録しました");
             return true;
         }
         if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove")) {
@@ -442,17 +440,17 @@ public class OnsenCommandExecutor implements CommandExecutor {
             String path = "OnsenList." + onsenName;
 
             if (!onsenConfig.contains(path)) {
-                sendMessage(player, "&b" + args[1] + "&6という名前の温泉は見つかりません");
+                sendMessage(player, "&b" + onsenName + "&6という名前の温泉は見つかりません");
                 return true;
             }
             onsenConfig.set(path, null);
             plugin.saveOnsenConfig();
-            sendMessage(player, "&b" + args[1] + "&fを&c削除&fしました");
+            sendMessage(player, "&b" + onsenName + "&fを&c削除&fしました");
             return true;
         }
         if (args[0].equalsIgnoreCase("set")) {
             if (args.length == 1) {
-                sendMessage(player, "&b/onsen set <Command>");
+                sendMessage(player, "&b/onsen set <設定項目>");
                 return true;
             }
             if (args.length >= 2 && args[1].equalsIgnoreCase("spawn")) {
@@ -463,7 +461,7 @@ public class OnsenCommandExecutor implements CommandExecutor {
                     onsenName = args[2];
                 }
                 if (onsenName == null) {
-                    sendMessage(player,"温泉が指定されていません。/onsen select <温泉名> または /onsen set spawn <温泉名> を使用してください");
+                    sendMessage(player, "温泉が指定されていません。/onsen select <温泉名> または /onsen set spawn <温泉名> を使用してください");
                     return true;
                 }
                 String path = "OnsenList." + onsenName;
@@ -483,45 +481,88 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 sendMessage(player, "&b" + onsenName + "&fの移動先を&dX座標:" + x + ", Y座標:" + y + ", Z座標:" + z + "&fに設定しました");
                 return true;
             }
-            if (args[1].equalsIgnoreCase("public")) {
-                if (args.length < 3) {
-                    sendMessage(player, "&b/onsen set public <温泉名>");
+            if (args.length >= 2 && args[1].equalsIgnoreCase("public")) {
+                String onsenName = null;
+                if (onsenManager.isSelected(playerId)) {
+                    onsenName = onsenManager.getSelectedOnsen(playerId);
+                } else if (args.length >= 3) {
+                    onsenName = args[2];
+                }
+                if (onsenName == null) {
+                    sendMessage(player, "温泉が指定されていません。/onsen select [温泉名] または /onsen set public [温泉名] を使用してください");
                     return true;
                 }
-                if (args[2].equalsIgnoreCase(args[2])) {
-                    String path = "OnsenList." + args[2];
-                    if (!onsenConfig.contains(path)) {
-                        sendMessage(player, "&b" + args[2] + "&6という名前の温泉は見つかりません");
-                        return true;
-                    }
-                    onsenConfig.set(path + ".Status", "public");
-                    plugin.saveOnsenConfig();
-                    sendMessage(player, "&b" + args[2] + "&fを&a公開&fに設定しました");
+
+                String path = "OnsenList." + onsenName;
+                if (!onsenConfig.contains(path)) {
+                    sendMessage(player, "&b" + onsenName + "&6という名前の温泉は見つかりません");
                     return true;
                 }
+                onsenConfig.set(path + ".Status", "public");
+                plugin.saveOnsenConfig();
+                sendMessage(player, "&b" + onsenName + "&fを&a公開&fに設定しました");
+                return true;
             }
             if (args[1].equalsIgnoreCase("private")) {
                 if (args.length < 3) {
                     sendMessage(player, "&b/onsen set private <温泉名>");
                     return true;
                 }
-                if (args[2].equalsIgnoreCase(args[2])) {
-                    String path = "OnsenList." + args[2];
-                    if (!onsenConfig.contains(path)) {
-                        sendMessage(player, "&b" + args[2] + "&6という名前の温泉は見つかりません");
-                        return true;
-                    }
-                    onsenConfig.set(path + ".Status", "private");
-                    plugin.saveOnsenConfig();
-                    sendMessage(player, "&b" + args[2] + "&fを&c非公開&fに設定しました");
+
+                String onsenName = null;
+                if (onsenManager.isSelected(playerId)) {
+                    onsenName = onsenManager.getSelectedOnsen(playerId);
+                } else if (args.length >= 3) {
+                    onsenName = args[2];
+                }
+                if (onsenName == null) {
+                    sendMessage(player, "温泉が指定されていません。/onsen select <温泉名> または /onsen set spawn <温泉名> を使用してください");
                     return true;
                 }
+
+                String path = "OnsenList." + onsenName;
+                if (!onsenConfig.contains(path)) {
+                    sendMessage(player, "&b" + args[2] + "&6という名前の温泉は見つかりません");
+                    return true;
+                }
+                onsenConfig.set(path + ".Status", "private");
+                plugin.saveOnsenConfig();
+                sendMessage(player, "&b" + args[2] + "&fを&c非公開&fに設定しました");
+                return true;
+            }
+            if (args[1].equalsIgnoreCase("ItemID")) {
+                if (args.length < 3) {
+                    sendMessage(player, "&b/onsen set ItemID <アイテムID> [温泉名]");
+                    return true;
+                }
+
+                String onsenName = null;
+                if (onsenManager.isSelected(playerId)) {
+                    onsenName = onsenManager.getSelectedOnsen(playerId);
+                } else if (args.length >= 3) {
+                    onsenName = args[2];
+                }
+                if (onsenName == null) {
+                    sendMessage(player, "温泉が指定されていません。/onsen select <温泉名> または /onsen set spawn <温泉名> を使用してください");
+                    return true;
+                }
+
+                String path = "OnsenList." + onsenName;
+                if (!onsenConfig.contains(path)) {
+                    sendMessage(player, "&b" + args[2] + "&6という名前の温泉は見つかりません");
+                    return true;
+                }
+                onsenConfig.set(path + ".Status", "private");
+                plugin.saveOnsenConfig();
+                sendMessage(player, "&b" + args[2] + "&fを&c非公開&fに設定しました");
+                return true;
             }
         } else {
             sendMessage(player, "&c" + args[0] + "というコマンドは見つかりませんでした");
         }
         return true;
     }
+
 
     private String getStatus(String status) {
         if (status == null) {

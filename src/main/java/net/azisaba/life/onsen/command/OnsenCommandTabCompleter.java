@@ -30,6 +30,7 @@ public class OnsenCommandTabCompleter implements TabCompleter {
         FileConfiguration onsenConfig = plugin.getOnsenConfig();
         if (args.length == 1) {
             completions.add("help");
+            completions.add("usage");
             completions.add("menu");
             completions.add("spawn");
             completions.add("select");
