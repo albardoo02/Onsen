@@ -30,22 +30,23 @@ public class OnsenCommandTabCompleter implements TabCompleter {
         FileConfiguration onsenConfig = plugin.getOnsenConfig();
         if (args.length == 1) {
             completions.add("help");
+            completions.add("menu");
             completions.add("spawn");
+            completions.add("select");
             completions.add("teleport");
             completions.add("tp");
             completions.add("set");
             completions.add("request");
             completions.add("requests");
-            completions.add("requestlist");
-            completions.add("menu");
             completions.add("reload");
             completions.add("list");
             completions.add("info");
-            completions.add("register");
+            completions.add("new");
             completions.add("delete");
+            completions.add("remove");
             return StringUtil.copyPartialMatches(args[0], completions, new ArrayList<>());
         } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("spawn") || args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("tp")) {
+            if (args[0].equalsIgnoreCase("spawn") || args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("select")) {
                 ConfigurationSection onsenListSection = onsenConfig.getConfigurationSection("OnsenList");
                 if (onsenListSection != null) {
                     Set<String> onsens = onsenListSection.getKeys(false);
@@ -65,7 +66,7 @@ public class OnsenCommandTabCompleter implements TabCompleter {
                 completions.add("deny");
                 completions.add("list");
             }
-            else if (args[0].equalsIgnoreCase("register")) {
+            else if (args[0].equalsIgnoreCase("new")) {
                 completions.add("<登録する温泉名>");
             }
             else if (args[0].equalsIgnoreCase("set")) {
@@ -73,7 +74,7 @@ public class OnsenCommandTabCompleter implements TabCompleter {
                 completions.add("private");
                 completions.add("spawn");
             }
-            else if (args[0].equalsIgnoreCase("delete")) {
+            else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("info")) {
                 ConfigurationSection onsenListSection = onsenConfig.getConfigurationSection("OnsenList");
                 if (onsenListSection != null) {
                     Set<String> onsens = onsenListSection.getKeys(false);
@@ -81,15 +82,6 @@ public class OnsenCommandTabCompleter implements TabCompleter {
                 }
                 return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
-            else if (args[0].equalsIgnoreCase("info")) {
-                ConfigurationSection onsenListSection = onsenConfig.getConfigurationSection("OnsenList");
-                if (onsenListSection != null) {
-                    Set<String> onsens = onsenListSection.getKeys(false);
-                    completions.addAll(onsens);
-                }
-                return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
-            }
-            return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
         }
         else if (args.length == 3) {
             if (args[1].equalsIgnoreCase("public")) {

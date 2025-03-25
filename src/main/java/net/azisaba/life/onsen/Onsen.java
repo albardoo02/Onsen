@@ -6,6 +6,7 @@ import net.azisaba.life.onsen.command.OnsenManager;
 import net.azisaba.life.onsen.listener.OnsenMenu;
 import net.azisaba.life.onsen.listener.OnsenRequestNotify;
 import net.azisaba.life.onsen.listener.OnsenTipMessage;
+import net.azisaba.life.onsen.listener.PlayerQuit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,6 +50,7 @@ public final class Onsen extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new OnsenMenu(this), this);
         this.getServer().getPluginManager().registerEvents(new OnsenRequestNotify(this), this);
         this.getServer().getPluginManager().registerEvents(new OnsenTipMessage(this), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerQuit(onsenManager), this);
     }
 
     private void updateConfig() {
@@ -62,7 +64,7 @@ public final class Onsen extends JavaPlugin {
         Path oldPath = Paths.get(getDataFolder().getPath(), "old", oldFileName);
         try {
             Files.move(configFile.toPath(), oldPath, StandardCopyOption.REPLACE_EXISTING);
-            getLogger().info("Configに新しいバージョンが見つかったため、ファイルを更新しています...");
+            getLogger().info("Configファイルに新しいバージョンが見つかったため、ファイルを更新しています...");
         } catch (IOException e) {
             e.printStackTrace();
         }

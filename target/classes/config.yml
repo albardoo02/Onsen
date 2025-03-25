@@ -12,7 +12,7 @@ OnsenTip:
 HelpMessage:
   - '&6======= 温泉コマンドヘルプ ======='
   - '&e/onsen help &7- &b温泉コマンドのヘルプを表示します'
-  - '&e/onsen menu &7- &b温泉メニューを表示します&c[機能停止中]'
+  - '&e/onsen menu &7- &b温泉メニューを表示します'
   - '&e/onsen list &7- &b温泉一覧を送信します'
   - '&e/onsen info <温泉名> &7- &b指定した温泉の詳細を表示します'
   - '&e/onsen spawn &7- &b温泉街に移動します'
@@ -21,7 +21,7 @@ HelpMessage:
 HelpMessageAdmin:
   - '&6======= 温泉コマンドヘルプ ======='
   - '&e/onsen help &7- &b温泉コマンドのヘルプを表示します'
-  - '&e/onsen menu &7- &b温泉メニューを表示します&c[機能停止中]'
+  - '&e/onsen menu &7- &b温泉メニューを表示します'
   - '&e/onsen list &7- &b温泉一覧を送信します'
   - '&e/onsen info <温泉名> &7- &b指定した温泉の詳細を表示します'
   - '&e/onsen spawn &7- &b温泉街に移動します'
