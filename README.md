@@ -17,4 +17,4 @@
 - `onsen.*`: 温泉プラグインの全権限
 
 ## ライセンス / License
-[MIT License](LICENSE)
+[GNU General Public License v3.0](LICENSE)
