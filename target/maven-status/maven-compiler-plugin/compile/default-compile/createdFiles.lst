@@ -1,0 +1,11 @@
+net\azisaba\life\onsen\command\OnsenCommandExecutor.class
+net\azisaba\life\onsen\listener\OnsenTipMessage.class
+net\azisaba\life\onsen\listener\OnsenRequestNotify.class
+net\azisaba\life\onsen\listener\OnsenMenu.class
+net\azisaba\life\onsen\Onsen.class
+net\azisaba\life\onsen\listener\OnsenRequestNotify$1.class
+net\azisaba\life\onsen\command\OnsenCommandTabCompleter.class
+net\azisaba\life\onsen\listener\OnsenMenu$1.class
+net\azisaba\life\onsen\command\OnsenManager.class
+net\azisaba\life\onsen\listener\OnsenRequestNotify$2.class
+net\azisaba\life\onsen\listener\OnsenTipMessage$1.class
