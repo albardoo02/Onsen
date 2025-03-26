@@ -1,8 +1,13 @@
 # Onsen Plugin YamlConfiguration
 # Config Version
-configVersion: 1.1
+configVersion: 1.2
+
 # Plugin Prefix
-Prefix: "&7[&e温泉システム&7]&r"
+Prefix: "&7[&eOnsen&7]&r"
+
+# Onsen Description Max Length
+max-description-length: 30
+
 # Chat Tip Message
 OnsenTip:
   TipMessage: "&a[温泉機能についてのお知らせ]\n&f-------------------------------\n&e温泉機能が新しくなりました！\n温泉機能の使い方は/onsen spawnで温泉街に移動できます\n詳しくはこのメッセージにカーソルを合わせてね！\n&f-------------------------------"
@@ -27,9 +32,9 @@ HelpMessageAdmin:
   - '&e/onsen spawn &7- &b温泉街に移動します'
   - '&e/onsen spawn <温泉名> &7- &b指定した温泉名に移動します'
   - '&e/onsen request <設定したい温泉名> &7- &b温泉リクエストを送信します'
-  - '&e/onsen <accept|deny> <温泉名> &7- &b温泉リクエストを&a承認&7/&c拒否&bします[OP]'
-  - '&e/onsen register <設定したい温泉名> &7- &b立っている場所を温泉を登録します[OP]'
+  - '&e/onsen <accept/deny> <温泉名> &7- &b温泉リクエストを&a承認&7/&c拒否&bします[OP]'
+  - '&e/onsen new <設定したい温泉名> &7- &b立っている場所を温泉を登録します[OP]'
   - '&e/onsen set spawn <温泉名> &7- &b指定した温泉名の移動先を設定します[OP]'
-  - '&e/onsen set <public|private> <温泉名> &7- &b指定した温泉の公開状況を設定します[OP]'
+  - '&e/onsen set <public|/private> <温泉名> &7- &b指定した温泉の公開状況を設定します[OP]'
   - '&e/onsen delete <温泉名> &7- &b指定した温泉を削除します[OP]'
   - '&e/onsen reload &7- &bConfigを再読み込みします[OP]'

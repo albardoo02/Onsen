@@ -6,7 +6,6 @@ import net.azisaba.life.onsen.command.OnsenManager;
 import net.azisaba.life.onsen.listener.OnsenMenu;
 import net.azisaba.life.onsen.listener.OnsenRequestNotify;
 import net.azisaba.life.onsen.listener.OnsenTipMessage;
-import net.azisaba.life.onsen.listener.PlayerQuit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,7 +31,7 @@ public final class Onsen extends JavaPlugin {
 
         FileConfiguration config = getConfig();
         String currentVersion = config.getString("configVersion", "0.0");
-        String CONFIG_VERSION = "1.1";
+        String CONFIG_VERSION = "1.2";
         if (!currentVersion.equals(CONFIG_VERSION)) {
             updateConfig();
         } else {
@@ -50,7 +49,7 @@ public final class Onsen extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new OnsenMenu(this), this);
         this.getServer().getPluginManager().registerEvents(new OnsenRequestNotify(this), this);
         this.getServer().getPluginManager().registerEvents(new OnsenTipMessage(this), this);
-        this.getServer().getPluginManager().registerEvents(new PlayerQuit(onsenManager), this);
+        this.getServer().getPluginManager().registerEvents(new OnsenManager(this), this);
     }
 
     private void updateConfig() {

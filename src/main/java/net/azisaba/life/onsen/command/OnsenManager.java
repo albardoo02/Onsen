@@ -1,12 +1,16 @@
 package net.azisaba.life.onsen.command;
 
 import net.azisaba.life.onsen.Onsen;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class OnsenManager {
+public class OnsenManager implements Listener {
 
     private final Onsen plugin;
     public OnsenManager(Onsen plugin) {
@@ -35,5 +39,12 @@ public class OnsenManager {
 
     public boolean isSelected(UUID playerId) {
         return selectedOnsen.containsKey(playerId);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        UUID playerID = player.getUniqueId();
+        clearSelectedOnsen(playerID);
     }
 }

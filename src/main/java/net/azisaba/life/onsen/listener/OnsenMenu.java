@@ -46,6 +46,7 @@ public class OnsenMenu implements Listener {
         Inventory inv = Bukkit.createInventory(player, 45, "§1§l温泉メニュー");
 
         setBorder(inv, Material.LIME_STAINED_GLASS_PANE);
+        setBlank(inv, Material.WHITE_STAINED_GLASS_PANE);
         inv.setItem(44, createItem(Material.BARRIER, "§c§l閉じる", Arrays.asList("§7§l左クリックでメニューを閉じます")));
 
         setItems(inv, new int[]{
@@ -106,8 +107,10 @@ public class OnsenMenu implements Listener {
             String onsenName = publicOnsenNames.get(i);
             ConfigurationSection onsen = onsenList.getConfigurationSection(onsenName);
             String path = "OnsenList." + onsenName;
+            String description = onsenConfig.getString(path + ".Description");
             String status = onsenConfig.getString(path + ".Status");
             String coloredStatus = getStatus(status);
+            String world = onsenConfig.getString(path + ".World");
 
             String uuidString = onsenConfig.getString(path + ".Player");
 
@@ -140,17 +143,24 @@ public class OnsenMenu implements Listener {
                 material = Material.CAMPFIRE;
             }
 
-            List<String> lore = Arrays.asList(
-                    "§6申請者: §f" + ownerName,
-                    "§6状態: §f" + coloredStatus,
-                    "§6ワールド: §f" + onsen.getString("World", "world"),
-                    "§6X座標: §f" + onsen.getInt("X"),
-                    "§6Y座標: §f" + onsen.getInt("Y"),
-                    "§6Z座標: §f" + onsen.getInt("Z")
-            );
+            List<String> lore = new ArrayList<>();
+            if (description != null && !description.isEmpty()) { // 説明文が存在する場合のみ追加
+                lore.add("§f" + description);
+            }
+            lore.add("§6申請者: §f" + ownerName);
+            if (player.hasPermission("onsen.command.list")) {
+                lore.add("§6状態: §f" + coloredStatus);
+                lore.add("§6World: §f" + world);
+                lore.add("§6X座標: §f" + onsen.getInt("X"));
+                lore.add("§6Y座標: §f" + onsen.getInt("Y"));
+                lore.add("§6Z座標: §f" + onsen.getInt("Z"));
+            } else {
+                lore.add("§6X座標: §f" + onsen.getInt("X"));
+                lore.add("§6Y座標: §f" + onsen.getInt("Y"));
+                lore.add("§6Z座標: §f" + onsen.getInt("Z"));
+            }
 
             ItemStack item = createItem(material, "§a" + onsenName, lore);
-
             if (enchant) {
                 item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
                 ItemMeta meta = item.getItemMeta();
@@ -261,14 +271,14 @@ public class OnsenMenu implements Listener {
         ConfigurationSection onsen = onsenConfig.getConfigurationSection("OnsenList." + onsenName);
 
         if (onsen == null) {
-            player.sendMessage(prefix + "§cその温泉は存在しません！");
+            sendMessage(player, "&cその温泉は存在しません！");
             return;
         }
 
         String worldName = onsen.getString("World");
         World world = Bukkit.getWorld(worldName);
         if (world == null) {
-            player.sendMessage(prefix + "§cワールドが見つかりません！");
+            sendMessage(player, "&CWorldが見つかりません！");
             return;
         }
 
@@ -294,6 +304,13 @@ public class OnsenMenu implements Listener {
     private static void setBorder(Inventory inv, Material borderMaterial) {
         ItemStack frame = createItem(borderMaterial, " ", null);
         for (int i : new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 36, 37, 38, 39, 40, 41, 42, 43}) {
+            inv.setItem(i, frame);
+        }
+    }
+
+    private static void setBlank(Inventory inv, Material borderMaterial) {
+        ItemStack frame = createItem(borderMaterial, " ", null);
+        for (int i : new int[]{9, 10, 11, 12, 14, 15, 16, 17, 18, 20, 24, 26, 27, 28, 29, 30, 32, 33, 34, 35}) {
             inv.setItem(i, frame);
         }
     }

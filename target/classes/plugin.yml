@@ -34,3 +34,6 @@ permissions:
   onsen.spawn.bypass:
     description: 温泉リストからの常時移動権限
     default: op
+  onsen.command.set:
+    description: 温泉編集権限
+    default: op

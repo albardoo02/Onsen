@@ -1,6 +1,7 @@
 package net.azisaba.life.onsen.command;
 
 import net.azisaba.life.onsen.Onsen;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -10,15 +11,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class OnsenCommandTabCompleter implements TabCompleter {
 
-    Onsen plugin;
+    private final Onsen plugin;
+    private final List<String> itemId;
 
     public OnsenCommandTabCompleter(Onsen plugin) {
         this.plugin = plugin;
+        this.itemId = getAllItemID();
     }
 
     @Override
@@ -61,19 +66,26 @@ public class OnsenCommandTabCompleter implements TabCompleter {
             }
             else if (args[0].equalsIgnoreCase("request")) {
                 completions.add("<設定したい温泉名>");
+                return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
             else if (args[0].equalsIgnoreCase("requests")) {
                 completions.add("accept");
                 completions.add("deny");
                 completions.add("list");
+                return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
             else if (args[0].equalsIgnoreCase("new")) {
                 completions.add("<登録する温泉名>");
+                return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
             else if (args[0].equalsIgnoreCase("set")) {
                 completions.add("public");
                 completions.add("private");
                 completions.add("spawn");
+                completions.add("itemID");
+                completions.add("enchant");
+                completions.add("description");
+                return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
             else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("info")) {
                 ConfigurationSection onsenListSection = onsenConfig.getConfigurationSection("OnsenList");
@@ -129,7 +141,38 @@ public class OnsenCommandTabCompleter implements TabCompleter {
                 }
                 return StringUtil.copyPartialMatches(args[2], completions, new ArrayList<>());
             }
+            if (args[1].equalsIgnoreCase("enchant")) {
+                completions.add("true");
+                completions.add("false");
+                return StringUtil.copyPartialMatches(args[2], completions, new ArrayList<>());
+            }
+            if (args[1].equalsIgnoreCase("description")) {
+                completions.add("<説明文>");
+                return StringUtil.copyPartialMatches(args[2], completions, new ArrayList<>());
+            }
+            if (args[1].equalsIgnoreCase("itemID")) {
+                String input = args[2].toLowerCase();
+                return itemId.stream()
+                        .filter(id -> id.toLowerCase().startsWith(input))
+                        .collect(Collectors.toList());
+            }
+        }
+        else if (args.length == 4) {
+            if (args[2].equalsIgnoreCase(args[2])) {
+                ConfigurationSection onsenListSection = onsenConfig.getConfigurationSection("OnsenList");
+                if (onsenListSection != null) {
+                    Set<String> onsens = onsenListSection.getKeys(false);
+                    completions.addAll(onsens);
+                }
+                return StringUtil.copyPartialMatches(args[3], completions, new ArrayList<>());
+            }
         }
         return null;
+    }
+
+    private List<String> getAllItemID() {
+        return Arrays.stream(Material.values())
+                .map(Material::name)
+                .collect(Collectors.toList());
     }
 }
