@@ -35,32 +35,46 @@ public class OnsenCommandTabCompleter implements TabCompleter {
         FileConfiguration onsenConfig = plugin.getOnsenConfig();
         if (args.length == 1) {
             completions.add("help");
-            completions.add("usage");
             completions.add("menu");
             completions.add("spawn");
-            completions.add("select");
             completions.add("teleport");
             completions.add("tp");
+            completions.add("select");
             completions.add("set");
             completions.add("request");
             completions.add("requests");
-            completions.add("reload");
             completions.add("list");
             completions.add("info");
-            completions.add("new");
-            completions.add("delete");
-            completions.add("remove");
+            if (sender.hasPermission("onsen.admin")) {
+                completions.add("reload");
+                completions.add("new");
+                completions.add("delete");
+                completions.add("remove");
+            }
             return StringUtil.copyPartialMatches(args[0], completions, new ArrayList<>());
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("spawn") || args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("select")) {
                 ConfigurationSection onsenListSection = onsenConfig.getConfigurationSection("OnsenList");
                 if (onsenListSection != null) {
-                    Set<String> onsens = onsenListSection.getKeys(false);
-                    for (String onsen : onsens) {
-                        if (onsenConfig.getString("OnsenList." + onsen + ".Status").equalsIgnoreCase("public")) {
-                            completions.add(onsen);
+                    if (sender.hasPermission("onsen.admin")) {
+                        Set<String> onsens = onsenListSection.getKeys(false);
+                        completions.addAll(onsens);
+                    } else {
+                        Set<String> onsens = onsenListSection.getKeys(false);
+                        for (String onsen : onsens) {
+                            if (onsenConfig.getString("OnsenList." + onsen + ".Status").equalsIgnoreCase("public")) {
+                                completions.add(onsen);
+                            }
                         }
+                        return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
                     }
+                }
+            }
+            if (args[0].equalsIgnoreCase("select")) {
+                ConfigurationSection onsenListSection = onsenConfig.getConfigurationSection("OnsenList");
+                if (onsenListSection != null) {
+                    Set<String> onsens = onsenListSection.getKeys(false);
+                    completions.addAll(onsens);
                 }
                 return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
@@ -69,22 +83,28 @@ public class OnsenCommandTabCompleter implements TabCompleter {
                 return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
             else if (args[0].equalsIgnoreCase("requests")) {
-                completions.add("accept");
-                completions.add("deny");
-                completions.add("list");
+                if (sender.hasPermission("onsen.admin")) {
+                    completions.add("accept");
+                    completions.add("deny");
+                    completions.add("list");
+                }
                 return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
             else if (args[0].equalsIgnoreCase("new")) {
-                completions.add("<登録する温泉名>");
+                if (sender.hasPermission("onsen.admin")) {
+                    completions.add("<登録する温泉名>");
+                }
                 return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
             else if (args[0].equalsIgnoreCase("set")) {
-                completions.add("public");
-                completions.add("private");
-                completions.add("spawn");
                 completions.add("itemID");
                 completions.add("enchant");
                 completions.add("description");
+                if (sender.hasPermission("onsen.admin")) {
+                    completions.add("public");
+                    completions.add("private");
+                    completions.add("spawn");
+                }
                 return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
             else if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("info")) {

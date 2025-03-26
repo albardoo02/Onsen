@@ -31,7 +31,7 @@ public final class Onsen extends JavaPlugin {
 
         FileConfiguration config = getConfig();
         String currentVersion = config.getString("configVersion", "0.0");
-        String CONFIG_VERSION = "1.2";
+        String CONFIG_VERSION = "1.0";
         if (!currentVersion.equals(CONFIG_VERSION)) {
             updateConfig();
         } else {

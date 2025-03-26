@@ -47,17 +47,17 @@ public class OnsenMenu implements Listener {
 
         setBorder(inv, Material.LIME_STAINED_GLASS_PANE);
         setBlank(inv, Material.WHITE_STAINED_GLASS_PANE);
-        inv.setItem(44, createItem(Material.BARRIER, "§c§l閉じる", Arrays.asList("§7§l左クリックでメニューを閉じます")));
+        inv.setItem(44, createItem(Material.BARRIER, "§c§l閉じる", Collections.singletonList("§7§l左クリックでメニューを閉じます")));
 
         setItems(inv, new int[]{
                 13, 19, 21, 22, 23, 25, 31
         }, new ItemStack[]{
-                createItem(Material.CAMPFIRE, "§6§l温泉街へ移動する", Arrays.asList("§e左クリックで温泉街へ移動します")),
-                createItem(Material.LAVA_BUCKET, "§c§l温泉の削除申請をする", Arrays.asList("§7左クリックで温泉の削除申請手順を表示します")),
-                createItem(Material.NETHER_STAR, "§e§l温泉一覧を表示する", Arrays.asList("§f左クリックで登録されている温泉一覧を表示します")),
+                createItem(Material.CAMPFIRE, "§6§l温泉街へ移動する", Collections.singletonList("§e左クリックで温泉街へ移動します")),
+                createItem(Material.EMERALD, "§b§l温泉リクエストを送信する", Collections.singletonList("§7左クリックで温泉リクエストの手順を表示します")),
+                createItem(Material.NETHER_STAR, "§e§l温泉一覧を表示する", Collections.singletonList("§f左クリックで登録されている温泉一覧を表示します")),
                 getPlayerHead(player),
-                createItem(Material.WRITABLE_BOOK, "§a§l温泉コマンドのヘルプを表示する", Arrays.asList("§f左クリックで温泉コマンドのヘルプを表示します")),
-                createItem(Material.GOLD_INGOT, "§b§l温泉限定アイテムを入手する", Arrays.asList("§f左クリックで温泉限定アイテムショップを開くよ！")),
+                createItem(Material.WRITABLE_BOOK, "§a§l温泉コマンドのヘルプを表示する", Collections.singletonList("§f左クリックで温泉コマンドのヘルプを表示します")),
+                createItem(Material.GOLD_INGOT, "§b§l温泉限定アイテムを入手する", Collections.singletonList("§f左クリックで温泉限定アイテムショップを開くよ！")),
                 createItem(Material.MAP, "§6§l温泉テレポート先選択", Arrays.asList("§7温泉テレポート先に§7§l1クリック§7でひとっとび！", "§7左クリックでテレポート先選択画面"))
         });
 
@@ -82,10 +82,15 @@ public class OnsenMenu implements Listener {
             ConfigurationSection onsenInfo = onsenList.getConfigurationSection(onsenName);
             if (onsenInfo == null) continue;
 
+            boolean hasPermission = player.hasPermission("onsen.admin");
             String status = onsenInfo.getString("Status", "unrated").toLowerCase();
 
-            if (!status.equalsIgnoreCase("public")) continue;
-            publicOnsenNames.add(onsenName);
+            if (hasPermission || status.equalsIgnoreCase("public")) {
+                publicOnsenNames.add(onsenName);
+            } else {
+                if (!status.equalsIgnoreCase("public")) continue;
+                publicOnsenNames.add(onsenName);
+            }
         }
 
         if (publicOnsenNames.isEmpty()) {
@@ -98,7 +103,7 @@ public class OnsenMenu implements Listener {
         int totalPages = (publicOnsenNames.size() + 44) / 45;
         page = Math.max(1, Math.min(page, totalPages));
 
-        Inventory inv = Bukkit.createInventory(player, 54, "§1§l温泉テレポートメニュー §r(Page " + page + "/" + totalPages + ")");
+        Inventory inv = Bukkit.createInventory(player, 54, "§1§l温泉テレポートメニュー §r(Page " + page + " / " + totalPages + ")");
 
         int start = (page - 1) * 45;
         int end = Math.min(start + 45, publicOnsenNames.size());
@@ -148,7 +153,7 @@ public class OnsenMenu implements Listener {
                 lore.add("§f" + description);
             }
             lore.add("§6申請者: §f" + ownerName);
-            if (player.hasPermission("onsen.command.list")) {
+            if (player.hasPermission("onsen.admin")) {
                 lore.add("§6状態: §f" + coloredStatus);
                 lore.add("§6World: §f" + world);
                 lore.add("§6X座標: §f" + onsen.getInt("X"));
@@ -203,9 +208,11 @@ public class OnsenMenu implements Listener {
                     player.closeInventory();
                     Bukkit.dispatchCommand(player, "onsen spawn");
                     break;
-                case LAVA_BUCKET:
+                case EMERALD:
                     player.closeInventory();
-                    sendMessage(player, "機能未実装のため表示不可");
+                    sendMessage(player, "&3温泉リクエストについて");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6温泉リクエストに関してはWikiを参照してください"));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.getConfig().getString("WikiURL", "&f&nhttps://wiki.azisaba.net/wiki/温泉について(Life)")));
                     break;
                 case NETHER_STAR:
                     player.closeInventory();
@@ -213,7 +220,7 @@ public class OnsenMenu implements Listener {
                     break;
                 case PLAYER_HEAD:
                     player.closeInventory();
-                    sendMessage(player, "機能未実装のため表示不可");
+                    Bukkit.dispatchCommand(player, "onsen requests");
                     break;
                 case WRITABLE_BOOK:
                     player.closeInventory();
@@ -221,7 +228,9 @@ public class OnsenMenu implements Listener {
                     break;
                 case GOLD_INGOT:
                     player.closeInventory();
-                    sendMessage(player, "機能未実装のため取引不可");
+                    sendMessage(player, "&3温泉限定アイテムについて");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f温泉限定アイテムは温泉街で入手できます"));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b/onsen spawn&fと打って温泉街に行こう！"));
                     break;
                 case MAP:
                     player.closeInventory();
@@ -322,12 +331,18 @@ public class OnsenMenu implements Listener {
     }
 
     private static ItemStack getPlayerHead(Player player) {
+        boolean hasPermission = player.hasPermission("onsen.admin");
         ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta skullMeta = (SkullMeta) playerHead.getItemMeta();
         if (skullMeta != null) {
             skullMeta.setOwningPlayer(player);
-            skullMeta.setDisplayName("§d§lリクエストした温泉の状態を確認する");
-            skullMeta.setLore(Arrays.asList("§f左クリックでリクエスト状況を確認できます"));
+            if (hasPermission) {
+                skullMeta.setDisplayName("§d§l温泉リクエスト一覧を表示する");
+                skullMeta.setLore(Collections.singletonList("§f左クリックでリクエストされた温泉一覧を確認できます"));
+            } else {
+                skullMeta.setDisplayName("§d§lリクエストした温泉の状態を確認する");
+                skullMeta.setLore(Collections.singletonList("§f左クリックでリクエスト状況を確認できます"));
+            }
             playerHead.setItemMeta(skullMeta);
         }
         return playerHead;
@@ -350,5 +365,4 @@ public class OnsenMenu implements Listener {
                 return ChatColor.GRAY + "不明" + ChatColor.RESET;
         }
     }
-
 }

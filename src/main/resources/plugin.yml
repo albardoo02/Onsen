@@ -12,28 +12,7 @@ commands:
 permissions:
   onsen.*:
     description: Onsenの全権限
-    children:
-      onsen.command.help: true
-      onsen.command.list: true
-      onsen.command.reload: true
-      onsen.request.notice: true
-      onsen.spawn.bypass: true
     default: op
-  onsen.command.help:
-    description: Helpコマンドの権限
-    default: op
-  onsen.command.list:
-    description: OnsenListの全表示権限
-    default: op
-  onsen.command.reload:
-    description: Reloadコマンド権限
-    default: op
-  onsen.request.notice:
-    description: 温泉リクエスト件数通知権限
-    default: op
-  onsen.spawn.bypass:
-    description: 温泉リストからの常時移動権限
-    default: op
-  onsen.command.set:
-    description: 温泉編集権限
+  onsen.admin:
+    description: Onsenプラグインの権限
     default: op

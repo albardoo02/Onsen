@@ -37,7 +37,7 @@ public class OnsenRequestNotify implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (player.hasPermission("onsen.request.notice")) {
+                if (player.hasPermission("onsen.admin")) {
                     int unratedCount = getUnratedOnsenCount();
                     if (unratedCount > 0) {
                         sendMessage(player, "&a温泉リクエストが&d" + unratedCount + "&a件届いています");
@@ -54,7 +54,7 @@ public class OnsenRequestNotify implements Listener {
                 int unratedCount = getUnratedOnsenCount();
                 if (unratedCount > 0) {
                     for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
-                        if (offlinePlayer.isOnline() && offlinePlayer.getPlayer().hasPermission("onsen.request.notice")) {
+                        if (offlinePlayer.isOnline() && offlinePlayer.getPlayer().hasPermission("onsen.admin")) {
                             sendMessage(offlinePlayer.getPlayer(), "&a温泉リクエストが&d" + unratedCount + "&a件あります");
                         }
                     }
