@@ -378,19 +378,16 @@ public class OnsenCommandExecutor implements CommandExecutor {
             }
             return true;
         }
-        if (args[0].equalsIgnoreCase("new")) {
-            if (args.length == 1) {
-                sendMessage(player, "&b/onsen new <登録する温泉名>");
-            }
+        if (args.length >= 1 && args[0].equalsIgnoreCase("new")) {
             String onsenName = null;
             if (onsenManager.isSelected(playerId)) {
                 onsenName = onsenManager.getSelectedOnsen(playerId);
-            } else if (args.length >= 3) {
-                onsenName = args[2];
+            } else if (args.length >= 2) {
+                onsenName = args[1];
             }
             if (onsenName == null) {
                 sendMessage(player, "&6温泉が選択されていません！");
-                sendMessage(player, "&b/onsen select <温泉名> &6で選択するか、&b/onsen set spawn <温泉名>&6を入力してください");
+                sendMessage(player, "&b/onsen select <温泉名> &6で選択するか、&b/onsen new <温泉名>&6を入力してください");
                 return true;
             }
 
@@ -740,8 +737,9 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 String coloredStatus = getStatus(status);
                 message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new ComponentBuilder(ChatColor.translateAlternateColorCodes('&',
-                                "&6状態:" + coloredStatus + "\n" +
-                                        "&6説明:" + description + "\n" +
+                                "&6説明:" + description + "\n" +
+                                        "&6申請者:" + ownerName + "\n" +
+                                        "&6状態:" + coloredStatus + "\n" +
                                         "&6World:&f" + world + "\n" +
                                         "&6X座標:&f" + x + "\n" +
                                         "&6Y座標:&f" + y + "\n" +
