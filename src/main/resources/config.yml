@@ -6,7 +6,7 @@ configVersion: 1.2
 Prefix: "&7[&eOnsen&7]&r"
 
 # Onsen Description Max Length
-max-description-length: 30
+max-description-length: 20
 
 # Chat Tip Message
 OnsenTip:

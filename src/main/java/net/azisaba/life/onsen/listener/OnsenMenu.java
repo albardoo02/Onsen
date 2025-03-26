@@ -144,7 +144,7 @@ public class OnsenMenu implements Listener {
             }
 
             List<String> lore = new ArrayList<>();
-            if (description != null && !description.isEmpty()) { // 説明文が存在する場合のみ追加
+            if (description != null && !description.isEmpty()) {
                 lore.add("§f" + description);
             }
             lore.add("§6申請者: §f" + ownerName);
