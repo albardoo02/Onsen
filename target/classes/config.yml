@@ -38,7 +38,7 @@ HelpMessageAdmin:
   - '&e/onsen <accept/deny> <温泉名> &7- &b温泉リクエストを&a承認&7/&c拒否&bします[OP]'
   - '&e/onsen new <設定したい温泉名> &7- &b立っている場所を温泉を登録します[OP]'
   - '&e/onsen set spawn <温泉名> &7- &b指定した温泉名の移動先を設定します[OP]'
-  - '&e/onsen set <public|/private> <温泉名> &7- &b指定した温泉の公開状況を設定します[OP]'
+  - '&e/onsen set <public/private> <温泉名> &7- &b指定した温泉の公開状況を設定します[OP]'
   - '&e/onsen set <設定項目> <温泉名> &7- &b指定した温泉の公開状況を設定します[OP]'
   - '&e/onsen delete <温泉名> &7- &b指定した温泉を削除します[OP]'
   - '&e/onsen reload &7- &bConfigを再読み込みします[OP]'
