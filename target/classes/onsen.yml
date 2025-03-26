@@ -14,6 +14,7 @@ OnsenList:
   #デフォルトの温泉街
   温泉街:
     ItemID: "CAMPFIRE"
+    Description: "default description"
     Enchant: true
     Player: "Admin"
     Status: "public"

@@ -124,7 +124,8 @@ public class OnsenCommandExecutor implements CommandExecutor {
             } else if (args.length == 1) {
                 onsenName = onsenManager.getSelectedOnsen(player.getUniqueId());
                 if (onsenName == null) {
-                    sendMessage(player, "&c温泉が選択されていません！ &b/onsen select <温泉名> &cで選択してください。");
+                    sendMessage(player, "&6温泉が選択されていません！");
+                    sendMessage(player, "&b/onsen select <温泉名>&6で選択するか、/onsen info <温泉名>を入力してください");
                     return true;
                 }
             } else {
@@ -278,11 +279,6 @@ public class OnsenCommandExecutor implements CommandExecutor {
             }
 
             if (args[1].equalsIgnoreCase("accept")) {
-                if (args.length < 3) {
-                    sendMessage(player, "&b/onsen requests accept <リクエストされた温泉名>");
-                    return true;
-                }
-
                 String onsenName = null;
                 if (onsenManager.isSelected(playerId)) {
                     onsenName = onsenManager.getSelectedOnsen(playerId);
@@ -290,7 +286,8 @@ public class OnsenCommandExecutor implements CommandExecutor {
                     onsenName = args[2];
                 }
                 if (onsenName == null) {
-                    sendMessage(player, "温泉が指定されていません。/onsen select <温泉名> または /onsen set spawn <温泉名> を使用してください");
+                    sendMessage(player, "&6温泉が選択されていません！");
+                    sendMessage(player, "&b/onsen select <温泉名>&6で選択するか、/onsen requests accept <温泉名>を入力してください");
                     return true;
                 }
 
@@ -328,10 +325,6 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 return true;
             }
             if (args[1].equalsIgnoreCase("deny")) {
-                if (args.length < 3) {
-                    sendMessage(player, "&b/onsen requests deny <リクエストされた温泉名>");
-                    return true;
-                }
                 String onsenName = null;
                 if (onsenManager.isSelected(playerId)) {
                     onsenName = onsenManager.getSelectedOnsen(playerId);
@@ -339,7 +332,8 @@ public class OnsenCommandExecutor implements CommandExecutor {
                     onsenName = args[2];
                 }
                 if (onsenName == null) {
-                    sendMessage(player, "温泉が指定されていません。/onsen select <温泉名> または /onsen set spawn <温泉名> を使用してください");
+                    sendMessage(player, "&6温泉が選択されていません！");
+                    sendMessage(player, "&b/onsen select <温泉名> &6で選択するか、/onsen requests deny <温泉名>を入力してください");
                     return true;
                 }
 
@@ -413,20 +407,15 @@ public class OnsenCommandExecutor implements CommandExecutor {
             return true;
         }
         if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove")) {
-            if (args.length == 1) {
-                sendMessage(player, "&b/onsen " + args[0] + "<温泉名>");
-                return true;
-            }
-
-            if (args.length >= 2) {
+            if (args.length >= 1) {
                 String onsenName = null;
                 if (onsenManager.isSelected(playerId)) {
                     onsenName = onsenManager.getSelectedOnsen(playerId);
-                } else if (args.length >= 3) {
-                    onsenName = args[2];
+                } else if (args.length >= 2) {
+                    onsenName = args[1];
                 }
                 if (onsenName == null) {
-                    sendMessage(player, "温泉が指定されていません。/onsen select <温泉名> または /onsen set spawn <温泉名> を使用してください");
+                    sendMessage(player, "温泉が指定されていません。/onsen select <温泉名> または /onsen delete <温泉名> を使用してください");
                     return true;
                 }
 
