@@ -162,8 +162,7 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 ownerName = "Admin";
             } else if (uuidString.equalsIgnoreCase("unknown")) {
                 ownerName = "不明";
-            }
-            else {
+            } else {
                 UUID playerUuid;
                 try {
                     playerUuid = UUID.fromString(uuidString);
@@ -226,10 +225,15 @@ public class OnsenCommandExecutor implements CommandExecutor {
                     return true;
                 }
                 if (status.equalsIgnoreCase("unrated")) {
-                    sendMessage(player, "&b" + args[1] + "&6はまだ承認されていません");
-                    return true;
+                    if (!player.hasPermission("onsen.admin")) {
+                        sendMessage(player, "&b" + args[1] + "&6はまだ承認されていません");
+                        return true;
+                    }
                 } else if (status.equalsIgnoreCase("deny")) {
-                    sendMessage(player, "&b" + args[1] + "&6はリクエストが却下されため移動できません");
+                    if (!player.hasPermission("onsen.admin")) {
+                        sendMessage(player, "&b" + args[1] + "&6はリクエストが却下されため移動できません");
+                        return true;
+                    }
                     return true;
                 } else if (status.equalsIgnoreCase("private")) {
                     if (!player.hasPermission("onsen.admin")) {
@@ -330,8 +334,7 @@ public class OnsenCommandExecutor implements CommandExecutor {
                         plugin.getLogger().warning(ownerName + "がオフラインのため通知ができませんでした");
                     }
                     return true;
-                } else {
-                    sendMessage(player, "&c権限がありません");
+                }
             }
             if (args[1].equalsIgnoreCase("deny")) {
                 if (player.hasPermission("onsen.admin")) {
@@ -375,12 +378,49 @@ public class OnsenCommandExecutor implements CommandExecutor {
                     } else {
                         plugin.getLogger().warning(ownerName + "がオフラインのため通知ができませんでした");
                     }
-                    return true;
                 } else {
                     sendMessage(player, "&c権限がありません");
                 }
+                return true;
             }
-            if (args.length >= 1 && args[0].equalsIgnoreCase("new")) {
+        }
+        if (args.length >= 1 && args[0].equalsIgnoreCase("new")) {
+            if (player.hasPermission("onsen.admin")) {
+                String onsenName = null;
+                if (onsenManager.isSelected(playerId)) {
+                    onsenName = onsenManager.getSelectedOnsen(playerId);
+                } else if (args.length >= 2) {
+                    onsenName = args[1];
+                }
+                if (onsenName == null) {
+                    sendMessage(player, "&6温泉が選択されていません！");
+                    sendMessage(player, "&b/onsen select <温泉名> &6で選択するか、&b/onsen new <温泉名>&6を入力してください");
+                    return true;
+                }
+
+                String path = "OnsenList." + onsenName;
+
+                if (onsenConfig.contains(path)) {
+                    sendMessage(player, "&b" + onsenName + "&6という名前の温泉は既に登録されています");
+                    return true;
+                }
+                Location loc = player.getLocation();
+                onsenConfig.set(path + ".Player", player.getUniqueId().toString());
+                onsenConfig.set(path + ".Status", "public");
+                onsenConfig.set(path + ".World", loc.getWorld().getName());
+                onsenConfig.set(path + ".X", loc.getBlockX());
+                onsenConfig.set(path + ".Y", loc.getBlockY());
+                onsenConfig.set(path + ".Z", loc.getBlockZ());
+                plugin.saveOnsenConfig();
+                sendMessage(player, "温泉名を&b" + onsenManager + "&fとして登録しました");
+                return true;
+            } else {
+                sendMessage(player, "&c権限がありません");
+                return true;
+            }
+        }
+        if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove")) {
+            if (args.length >= 1) {
                 if (player.hasPermission("onsen.admin")) {
                     String onsenName = null;
                     if (onsenManager.isSelected(playerId)) {
@@ -390,67 +430,29 @@ public class OnsenCommandExecutor implements CommandExecutor {
                     }
                     if (onsenName == null) {
                         sendMessage(player, "&6温泉が選択されていません！");
-                        sendMessage(player, "&b/onsen select <温泉名> &6で選択するか、&b/onsen new <温泉名>&6を入力してください");
+                        sendMessage(player, "&b/onsen select <温泉名> &6で選択するか、&b/onsen delete <温泉名>&6を入力してください");
+                        return true;
+                    }
+
+                    if (!canModifyOnsen(player, onsenName)) {
+                        sendMessage(player, "&cこの温泉を変更する権限がありません");
                         return true;
                     }
 
                     String path = "OnsenList." + onsenName;
 
-                    if (onsenConfig.contains(path)) {
-                        sendMessage(player, "&b" + onsenName + "&6という名前の温泉は既に登録されています");
+                    if (!onsenConfig.contains(path)) {
+                        sendMessage(player, "&b" + onsenName + "&6という名前の温泉は見つかりません");
                         return true;
                     }
-                    Location loc = player.getLocation();
-                    onsenConfig.set(path + ".Player", player.getUniqueId().toString());
-                    onsenConfig.set(path + ".Status", "public");
-                    onsenConfig.set(path + ".World", loc.getWorld().getName());
-                    onsenConfig.set(path + ".X", loc.getBlockX());
-                    onsenConfig.set(path + ".Y", loc.getBlockY());
-                    onsenConfig.set(path + ".Z", loc.getBlockZ());
+                    onsenConfig.set(path, null);
                     plugin.saveOnsenConfig();
-                    sendMessage(player, "温泉名を&b" + onsenManager + "&fとして登録しました");
+                    sendMessage(player, "&b" + onsenName + "&fを&c削除&fしました");
                     return true;
                 } else {
-                    sendMessage(player ,"&c権限がありません");
-                }
-            }
-            if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove")) {
-                if (args.length >= 1) {
-                    if (player.hasPermission("onsen.admin")) {
-                        String onsenName = null;
-                        if (onsenManager.isSelected(playerId)) {
-                            onsenName = onsenManager.getSelectedOnsen(playerId);
-                        } else if (args.length >= 2) {
-                            onsenName = args[1];
-                        }
-                        if (onsenName == null) {
-                            sendMessage(player, "&6温泉が選択されていません！");
-                            sendMessage(player, "&b/onsen select <温泉名> &6で選択するか、&b/onsen delete <温泉名>&6を入力してください");
-                            return true;
-                        }
-
-                        if (!canModifyOnsen(player, onsenName)) {
-                            sendMessage(player, "&cこの温泉を変更する権限がありません");
-                            return true;
-                        }
-
-                        String path = "OnsenList." + onsenName;
-
-                        if (!onsenConfig.contains(path)) {
-                            sendMessage(player, "&b" + onsenName + "&6という名前の温泉は見つかりません");
-                            return true;
-                        }
-                        onsenConfig.set(path, null);
-                        plugin.saveOnsenConfig();
-                        sendMessage(player, "&b" + onsenName + "&fを&c削除&fしました");
-                        return true;
-                    }
                     sendMessage(player, "&c権限がありません");
+                    return true;
                 }
-            }
-            } else {
-                sendMessage(player ,"&c権限がありません");
-                return true;
             }
         }
         if (args[0].equalsIgnoreCase("set")) {
