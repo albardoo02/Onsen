@@ -48,6 +48,7 @@ public class OnsenCommandExecutor implements CommandExecutor {
 
         if (player.getWorld().getName().equalsIgnoreCase("tutorial")) {
             sendMessage(player, "&cチュートリアルワールドでは実行できません");
+            return true;
         }
 
         if (args.length == 0) {
