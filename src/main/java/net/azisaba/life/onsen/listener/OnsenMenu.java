@@ -45,8 +45,8 @@ public class OnsenMenu implements Listener {
     public static void openOnsenMenu(Player player) {
         Inventory inv = Bukkit.createInventory(player, 45, "§1§l温泉メニュー");
 
-        setBorder(inv, Material.LIME_STAINED_GLASS_PANE);
-        setBlank(inv, Material.WHITE_STAINED_GLASS_PANE);
+        setBorder(inv);
+        setBlank(inv);
         inv.setItem(44, createItem(Material.BARRIER, "§c§l閉じる", Collections.singletonList("§7§l左クリックでメニューを閉じます")));
 
         setItems(inv, new int[]{
@@ -297,7 +297,18 @@ public class OnsenMenu implements Listener {
         double x = onsen.getDouble("X");
         double y = onsen.getDouble("Y");
         double z = onsen.getDouble("Z");
-        player.teleport(new Location(world, x, y, z));
+
+        float yaw = 0.0f;
+        float pitch = 0.0f;
+
+        if (onsenConfig.contains(onsen + ".Yaw")) {
+            yaw = (float) onsenConfig.getDouble(onsen + ".Yaw");
+        }
+        if (onsenConfig.contains(onsen + ".Pitch")) {
+            pitch = (float) onsenConfig.getDouble(onsen + ".Pitch");
+        }
+
+        player.teleport(new Location(world, x, y, z, yaw, pitch));
         sendMessage(player, "&a" + onsenName + "に移動しました");
     }
 
@@ -313,15 +324,15 @@ public class OnsenMenu implements Listener {
         return item;
     }
 
-    private static void setBorder(Inventory inv, Material borderMaterial) {
-        ItemStack frame = createItem(borderMaterial, " ", null);
+    private static void setBorder(Inventory inv) {
+        ItemStack frame = createItem(Material.LIME_STAINED_GLASS_PANE, " ", null);
         for (int i : new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 36, 37, 38, 39, 40, 41, 42, 43}) {
             inv.setItem(i, frame);
         }
     }
 
-    private static void setBlank(Inventory inv, Material borderMaterial) {
-        ItemStack frame = createItem(borderMaterial, " ", null);
+    private static void setBlank(Inventory inv) {
+        ItemStack frame = createItem(Material.WHITE_STAINED_GLASS_PANE, " ", null);
         for (int i : new int[]{9, 10, 11, 12, 14, 15, 16, 17, 18, 20, 24, 26, 27, 28, 29, 30, 32, 33, 34, 35}) {
             inv.setItem(i, frame);
         }

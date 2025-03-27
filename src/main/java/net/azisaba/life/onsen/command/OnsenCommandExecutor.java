@@ -149,9 +149,9 @@ public class OnsenCommandExecutor implements CommandExecutor {
             String description = onsenConfig.getString(path + ".Description", "未設定");
             String coloredStatus = getStatus(status);
             String world = onsenConfig.getString(path + ".World");
-            int x = onsenConfig.getInt(path + ".X");
-            int y = onsenConfig.getInt(path + ".Y");
-            int z = onsenConfig.getInt(path + ".Z");
+            double x = onsenConfig.getDouble(path + ".X");
+            double y = onsenConfig.getDouble(path + ".Y");
+            double z = onsenConfig.getDouble(path + ".Z");
 
             String uuidString = onsenConfig.getString(path + ".Player");
             String ownerName = null;
@@ -200,16 +200,26 @@ public class OnsenCommandExecutor implements CommandExecutor {
         if (args[0].equalsIgnoreCase("spawn") || args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("tp")) {
             if (args.length == 1) {
                 String path = "OnsenList.温泉街";
-                World world = Bukkit.getWorld(onsenConfig.getString(path + ".World"));
+                World world = Bukkit.getWorld(onsenConfig.getString(path + ".World", "world"));
                 if (world == null) {
                     sendMessage(player, "&c移動先のworldが見つかりません");
                     return true;
                 }
-                int x = onsenConfig.getInt(path + ".X");
-                int y = onsenConfig.getInt(path + ".Y");
-                int z = onsenConfig.getInt(path + ".Z");
+                double x = onsenConfig.getDouble(path + ".X");
+                double y = onsenConfig.getDouble(path + ".Y");
+                double z = onsenConfig.getDouble(path + ".Z");
 
-                player.teleport(new Location(world, x, y, z));
+                float yaw = 0.0f;
+                float pitch = 0.0f;
+
+                if (onsenConfig.contains(path + ".Yaw")) {
+                    yaw = (float) onsenConfig.getDouble(path + ".Yaw");
+                }
+                if (onsenConfig.contains(path + ".Pitch")) {
+                    pitch = (float) onsenConfig.getDouble(path + ".Pitch");
+                }
+
+                player.teleport(new Location(world, x, y, z, yaw, pitch));
                 sendMessage(player, "&6温泉街へ移動しました&b^w^");
                 return true;
             }
@@ -247,11 +257,21 @@ public class OnsenCommandExecutor implements CommandExecutor {
                     sendMessage(player, "&c移動先のworldが見つかりません");
                     return true;
                 }
-                int x = onsenConfig.getInt(path + ".X");
-                int y = onsenConfig.getInt(path + ".Y");
-                int z = onsenConfig.getInt(path + ".Z");
+                double x = onsenConfig.getDouble(path + ".X");
+                double y = onsenConfig.getDouble(path + ".Y");
+                double z = onsenConfig.getDouble(path + ".Z");
 
-                player.teleport(new Location(world, x, y, z));
+                float yaw = 0.0f;
+                float pitch = 0.0f;
+
+                if (onsenConfig.contains(path + ".Yaw")) {
+                    yaw = (float) onsenConfig.getDouble(path + ".Yaw");
+                }
+                if (onsenConfig.contains(path + ".Pitch")) {
+                    pitch = (float) onsenConfig.getDouble(path + ".Pitch");
+                }
+
+                player.teleport(new Location(world, x, y, z, yaw, pitch));
                 sendMessage(player, "&b" + args[1] + "&fに移動しました");
                 return true;
             }
@@ -481,19 +501,25 @@ public class OnsenCommandExecutor implements CommandExecutor {
 
                     String path = "OnsenList." + onsenName;
                     Location location = player.getLocation();
-                    int x = location.getBlockX();
-                    int y = location.getBlockY();
-                    int z = location.getBlockZ();
+                    double x = location.getBlockX();
+                    double y = location.getBlockY();
+                    double z = location.getBlockZ();
+                    float yaw = location.getYaw();
+                    float pitch = location.getPitch();
+
                     if (!onsenConfig.contains(path)) {
                         sendMessage(player, "&b" + onsenName + "&6という名前の温泉は見つかりません");
                         return true;
                     }
+
                     onsenConfig.set(path + ".World", location.getWorld().getName());
                     onsenConfig.set(path + ".X", x);
                     onsenConfig.set(path + ".Y", y);
                     onsenConfig.set(path + ".Z", z);
+                    onsenConfig.set(path + ".Yaw", yaw);
+                    onsenConfig.set(path + ".Pitch", pitch);
                     plugin.saveOnsenConfig();
-                    sendMessage(player, "&b" + onsenName + "&fの移動先を&6X座標:&d" + x + "&7, &6Y座標:&d" + y + "&7, &6Z座標:&d" + z + "&fに設定しました");
+                    sendMessage(player, "&b" + onsenName + "&fの移動先を&6X:&d" + x + "&7, &6Y:&d" + y + "&7, &6Z:&d" + z + "&7, &6Yaw:&d" + yaw + "&7, &6Pitch:&d" + pitch + "&fに設定しました");
                     return true;
                 } else {
                     sendMessage(player, "&c権限がありません");
@@ -765,9 +791,19 @@ public class OnsenCommandExecutor implements CommandExecutor {
             String coloredStatus = getStatus(status);
             String description = onsenConfig.getString(path + ".Description", "未設定");
             String world = onsenConfig.getString(path + ".World", "不明");
-            int x = onsenConfig.getInt(path + ".X");
-            int y = onsenConfig.getInt(path + ".Y");
-            int z = onsenConfig.getInt(path + ".Z");
+            double x = onsenConfig.getDouble(path + ".X");
+            double y = onsenConfig.getDouble(path + ".Y");
+            double z = onsenConfig.getDouble(path + ".Z");
+
+            float yaw = 0.0f;
+            float pitch = 0.0f;
+
+            if (onsenConfig.contains(path + ".Yaw")) {
+                yaw = (float) onsenConfig.getDouble(path + ".Yaw");
+            }
+            if (onsenConfig.contains(path + ".Pitch")) {
+                pitch = (float) onsenConfig.getDouble(path + ".Pitch");
+            }
 
             TextComponent message = new TextComponent(ChatColor.GRAY + "[" + (i + 1) + "] " + ChatColor.AQUA + onsenName + ChatColor.GRAY + " - " + ChatColor.WHITE + description + ChatColor.RESET);
             message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/onsen info " + onsenName));
@@ -781,7 +817,9 @@ public class OnsenCommandExecutor implements CommandExecutor {
                                         "&6World: &f" + world + "\n" +
                                         "&6X座標: &f" + x + "\n" +
                                         "&6Y座標: &f" + y + "\n" +
-                                        "&6Z座標: &f" + z
+                                        "&6Z座標: &f" + z + "\n" +
+                                        "&6水平方向: &f" + yaw + "\n" +
+                                        "&6垂直方向: &f" + pitch
                         )).create()));
             } else if ("public".equalsIgnoreCase(status)) {
                 message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -791,7 +829,10 @@ public class OnsenCommandExecutor implements CommandExecutor {
                                         "&6状態: &f" + coloredStatus + "\n" +
                                         "&6X座標: &f" + x + "\n" +
                                         "&6Y座標: &f" + y + "\n" +
-                                        "&6Z座標: &f" + z)).create()));
+                                        "&6Z座標: &f" + z + "\n" +
+                                        "&6水平方向: &f" + yaw + "\n" +
+                                        "&6垂直方向: &f" + pitch
+                        )).create()));
             } else {
                 continue;
             }
@@ -886,9 +927,19 @@ public class OnsenCommandExecutor implements CommandExecutor {
             String description = onsenConfig.getString(path + ".Description", "未設定");
             String coloredStatus = getStatus(status);
             String world = onsenConfig.getString(path + ".World", "不明");
-            int x = onsenConfig.getInt(path + ".X");
-            int y = onsenConfig.getInt(path + ".Y");
-            int z = onsenConfig.getInt(path + ".Z");
+            double x = onsenConfig.getDouble(path + ".X");
+            double y = onsenConfig.getDouble(path + ".Y");
+            double z = onsenConfig.getDouble(path + ".Z");
+
+            float yaw = 0.0f;
+            float pitch = 0.0f;
+
+            if (onsenConfig.contains(path + ".Yaw")) {
+                yaw = (float) onsenConfig.getDouble(path + ".Yaw");
+            }
+            if (onsenConfig.contains(path + ".Pitch")) {
+                pitch = (float) onsenConfig.getDouble(path + ".Pitch");
+            }
 
             boolean isAdmin = player.hasPermission("onsen.admin");
 
@@ -904,7 +955,9 @@ public class OnsenCommandExecutor implements CommandExecutor {
                                         "&6World: &f" + world + "\n" +
                                         "&6X座標: &f" + x + "\n" +
                                         "&6Y座標: &f" + y + "\n" +
-                                        "&6Z座標: &f" + z
+                                        "&6Z座標: &f" + z + "\n" +
+                                        "&6水平方向: &f" + yaw + "\n" +
+                                        "&6垂直方向: &f" + pitch
                         )).create()));
                 player.spigot().sendMessage(message);
             } else {
@@ -916,7 +969,9 @@ public class OnsenCommandExecutor implements CommandExecutor {
                                         "&6状態: &f" + coloredStatus + "\n" +
                                         "&6X座標: &f" + x + "\n" +
                                         "&6Y座標: &f" + y + "\n" +
-                                        "&6Z座標: &f" + z
+                                        "&6Z座標: &f" + z + "\n" +
+                                        "&6水平方向: &f" + yaw + "\n" +
+                                        "&6垂直方向: &f" + pitch
                         )).create()));
                 player.spigot().sendMessage(message);
             }

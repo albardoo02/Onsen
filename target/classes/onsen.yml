@@ -10,6 +10,8 @@
 # X: X座標
 # Y: Y座標
 # X: X座標
+# Yaw: 垂直方向
+# Pitch: 水平方向
 OnsenList:
   #デフォルトの温泉街
   温泉街:
@@ -19,6 +21,8 @@ OnsenList:
     Player: "Admin"
     Status: "public"
     World: "world"
-    X: 100
-    Y: 100
-    Z: 100
+    X:
+    Y:
+    Z:
+    Yaw:
+    Pitch:
