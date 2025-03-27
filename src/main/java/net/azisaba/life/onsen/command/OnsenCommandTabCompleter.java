@@ -66,8 +66,8 @@ public class OnsenCommandTabCompleter implements TabCompleter {
                                 completions.add(onsen);
                             }
                         }
-                        return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
                     }
+                    return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
                 }
             }
             if (args[0].equalsIgnoreCase("select")) {

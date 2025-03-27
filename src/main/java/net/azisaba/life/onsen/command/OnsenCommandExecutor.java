@@ -46,10 +46,14 @@ public class OnsenCommandExecutor implements CommandExecutor {
         FileConfiguration config = plugin.getConfig();
         FileConfiguration onsenConfig = plugin.getOnsenConfig();
 
+        if (player.getWorld().getName().equalsIgnoreCase("tutorial")) {
+            sendMessage(player, "&cチュートリアルワールドでは実行できません");
+        }
+
         if (args.length == 0) {
             sendMessage(player, "&6温泉プラグイン");
             player.sendMessage("詳しくは/helpもしくはWikiを確認してね！");
-            player.sendMessage(plugin.getConfig().getString("WikiURL"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("WikiURL")));
             return true;
         }
         if (args[0].equalsIgnoreCase("help")) {

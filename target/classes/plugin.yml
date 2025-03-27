@@ -1,5 +1,5 @@
 name: Onsen
-version: '1.0-SNAPSHOT'
+version: '1.0'
 main: net.azisaba.life.onsen.Onsen
 author: albardoo02
 api-version: '1.15'
