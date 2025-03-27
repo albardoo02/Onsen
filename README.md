@@ -10,8 +10,8 @@ Minecraft Ver 1.15.2でのみ動作確認しています。
 
 その他バージョンについての動作は保証しません。
 
-## コマンド
-・`/onsen`: 基本コマンド
+## 使い方
+https://wiki.azisaba.net/wiki/温泉について(Life)
 
 ## 権限 / Permission
 - `onsen.admin`: 温泉プラグインの全権限
