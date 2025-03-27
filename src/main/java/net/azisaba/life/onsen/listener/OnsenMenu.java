@@ -125,7 +125,10 @@ public class OnsenMenu implements Listener {
                 return;
             } else if (uuidString.equalsIgnoreCase("Admin")) {
                 ownerName = "Admin";
-            } else {
+            } else if (uuidString.equalsIgnoreCase("unknown")) {
+                ownerName = "不明";
+            }
+            else {
                 UUID playerUuid;
                 try {
                     playerUuid = UUID.fromString(uuidString);

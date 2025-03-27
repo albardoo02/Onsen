@@ -13,7 +13,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +48,8 @@ public class OnsenCommandExecutor implements CommandExecutor {
 
         if (args.length == 0) {
             sendMessage(player, "&6温泉プラグイン");
+            player.sendMessage("詳しくは/helpもしくはWikiを確認してね！");
+            player.sendMessage(plugin.getConfig().getString("WikiURL"));
             return true;
         }
         if (args[0].equalsIgnoreCase("help")) {
@@ -154,7 +155,10 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 return true;
             } else if (uuidString.equalsIgnoreCase("Admin")) {
                 ownerName = "Admin";
-            } else {
+            } else if (uuidString.equalsIgnoreCase("unknown")) {
+                ownerName = "不明";
+            }
+            else {
                 UUID playerUuid;
                 try {
                     playerUuid = UUID.fromString(uuidString);
@@ -688,9 +692,6 @@ public class OnsenCommandExecutor implements CommandExecutor {
                     return true;
                 }
             }
-            return true;
-        } else {
-            sendMessage(player, "&c" + args[0] + "というコマンドは見つかりませんでした");
         }
         return true;
     }
@@ -739,7 +740,9 @@ public class OnsenCommandExecutor implements CommandExecutor {
             String ownerName;
             if (playerUuidString.equalsIgnoreCase("Admin")) {
                 ownerName = "Admin";
-            } else {
+            } else if (playerUuidString.equalsIgnoreCase("unknown")) {
+                ownerName = "不明";
+            }else {
                 UUID playerUuid;
                 try {
                     playerUuid = UUID.fromString(playerUuidString);
@@ -940,6 +943,8 @@ public class OnsenCommandExecutor implements CommandExecutor {
     private String getOwnerNameFromUUID(String uuidStr) {
         if (uuidStr.equalsIgnoreCase("Admin")) {
             return "Admin";
+        } else if (uuidStr.equalsIgnoreCase("unknown")) {
+            return "不明";
         }
         try {
             UUID uuid = UUID.fromString(uuidStr);
