@@ -159,13 +159,17 @@ public class OnsenMenu implements Listener {
             if (player.hasPermission("onsen.admin")) {
                 lore.add("§6状態: §f" + coloredStatus);
                 lore.add("§6World: §f" + world);
-                lore.add("§6X座標: §f" + onsen.getInt("X"));
-                lore.add("§6Y座標: §f" + onsen.getInt("Y"));
-                lore.add("§6Z座標: §f" + onsen.getInt("Z"));
+                lore.add("§6X座標: §f" + onsen.getDouble("X"));
+                lore.add("§6Y座標: §f" + onsen.getDouble("Y"));
+                lore.add("§6Z座標: §f" + onsen.getDouble("Z"));
+                lore.add("§6水平方向: §f" + onsen.getDouble(".Yaw"));
+                lore.add("§6垂直方向: §f" + onsen.getDouble(".Pitch"));
             } else {
-                lore.add("§6X座標: §f" + onsen.getInt("X"));
-                lore.add("§6Y座標: §f" + onsen.getInt("Y"));
-                lore.add("§6Z座標: §f" + onsen.getInt("Z"));
+                lore.add("§6X座標: §f" + onsen.getDouble("X"));
+                lore.add("§6Y座標: §f" + onsen.getDouble("Y"));
+                lore.add("§6Z座標: §f" + onsen.getDouble("Z"));
+                lore.add("§6水平方向: §f" + onsen.getDouble(".Yaw"));
+                lore.add("§6垂直方向: §f" + onsen.getDouble(".Pitch"));
             }
 
             ItemStack item = createItem(material, "§a" + onsenName, lore);

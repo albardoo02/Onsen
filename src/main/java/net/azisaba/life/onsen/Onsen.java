@@ -5,7 +5,6 @@ import net.azisaba.life.onsen.command.OnsenCommandTabCompleter;
 import net.azisaba.life.onsen.command.OnsenManager;
 import net.azisaba.life.onsen.listener.OnsenMenu;
 import net.azisaba.life.onsen.listener.OnsenRequestNotify;
-import net.azisaba.life.onsen.listener.OnsenTipMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -48,7 +47,6 @@ public final class Onsen extends JavaPlugin {
         this.getCommand("onsen").setTabCompleter(new OnsenCommandTabCompleter(this));
         this.getServer().getPluginManager().registerEvents(new OnsenMenu(this), this);
         this.getServer().getPluginManager().registerEvents(new OnsenRequestNotify(this), this);
-        this.getServer().getPluginManager().registerEvents(new OnsenTipMessage(this), this);
         this.getServer().getPluginManager().registerEvents(new OnsenManager(this), this);
     }
 

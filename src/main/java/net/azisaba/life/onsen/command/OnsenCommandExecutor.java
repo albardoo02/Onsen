@@ -72,6 +72,11 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 return true;
             }
         }
+        if (args[0].equalsIgnoreCase("wiki")) {
+            sendMessage(player, "温泉のWikiページはこちら！");
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.getConfig().getString("WikiURL")));
+            return true;
+        }
         if (args[0].equalsIgnoreCase("reload")) {
             if (player.hasPermission("onsen.admin")) {
                 plugin.reloadConfig();
@@ -153,6 +158,17 @@ public class OnsenCommandExecutor implements CommandExecutor {
             double y = onsenConfig.getDouble(path + ".Y");
             double z = onsenConfig.getDouble(path + ".Z");
 
+            float yaw = 0.0f;
+            float pitch = 0.0f;
+
+            if (onsenConfig.contains(path + ".Yaw")) {
+                yaw = (float) onsenConfig.getDouble(path + ".Yaw");
+            }
+            if (onsenName.contains(path + ".Pitch")) {
+                pitch = (float) onsenConfig.getDouble(path + ".Pitch");
+            }
+
+
             String uuidString = onsenConfig.getString(path + ".Player");
             String ownerName = null;
             if (uuidString == null) {
@@ -186,6 +202,8 @@ public class OnsenCommandExecutor implements CommandExecutor {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6X座標: &f" + x));
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Y座標: &f" + y));
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Z座標: &f" + z));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6水平方向: &f" + yaw));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6垂直方向: &f" + pitch));
 
             if (status.equalsIgnoreCase("public") || player.hasPermission("onsen.admin")) {
                 TextComponent message = new TextComponent(ChatColor.DARK_AQUA + "クリックで温泉に移動する");
@@ -278,10 +296,13 @@ public class OnsenCommandExecutor implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("request")) {
             if (args.length == 1) {
-                sendMessage(player, "&b/onsen request <設定したい温泉名>");
+                sendMessage(player, "このコマンドでは温泉リクエストをすることができます");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&b/onsen request <リクエストする温泉名> <温泉の説明> <アイテムID>"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&fリクエストする温泉名以降は任意です"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&f温泉名以降の項目は温泉リクエストが承認されると変更可能になります"));
                 return true;
             }
-            if (args.length >= 2) {
+            if (args.length == 2) {
                 String path = "OnsenList." + args[1];
                 if (onsenConfig.contains(path)) {
                     sendMessage(player, "&b" + args[1] + "&fという名前の温泉は既に登録されています");
@@ -293,8 +314,64 @@ public class OnsenCommandExecutor implements CommandExecutor {
                 onsenConfig.set(path + ".X", player.getLocation().getBlockX());
                 onsenConfig.set(path + ".Y", player.getLocation().getBlockY());
                 onsenConfig.set(path + ".Z", player.getLocation().getBlockZ());
+                onsenConfig.set(path + ".Yaw", player.getLocation().getYaw());
+                onsenConfig.set(path + ".Pitch", player.getLocation().getPitch());
                 plugin.saveOnsenConfig();
-                sendMessage(player, "温泉名を&b" + args[1] + "&fでリクエストを送信しました");
+                sendMessage(player, "&f温泉名を&b" + args[1] + ", &fでリクエストを送信しました");
+                for (Player admin : Bukkit.getOnlinePlayers()) {
+                    if (admin.hasPermission("onsen.admin")) {
+                        sendMessage(admin, "&d" + player.getName() + "&fが&b" + args[1] + "&fの温泉登録リクエストを申請しました");
+                        return true;
+                    }
+                }
+                return true;
+            }
+            if (args.length == 3) {
+                String path = "OnsenList." + args[1];
+                String description = args[2];
+                if (onsenConfig.contains(path)) {
+                    sendMessage(player, "&b" + args[1] + "&fという名前の温泉は既に登録されています");
+                    return true;
+                }
+                onsenConfig.set(path + ".Player", player.getUniqueId().toString());
+                onsenConfig.set(path + ".Description", description);
+                onsenConfig.set(path + ".Status", "unrated");
+                onsenConfig.set(path + ".World", player.getWorld().getName());
+                onsenConfig.set(path + ".X", player.getLocation().getBlockX());
+                onsenConfig.set(path + ".Y", player.getLocation().getBlockY());
+                onsenConfig.set(path + ".Z", player.getLocation().getBlockZ());
+                onsenConfig.set(path + ".Yaw", player.getLocation().getYaw());
+                onsenConfig.set(path + ".Pitch", player.getLocation().getPitch());
+                plugin.saveOnsenConfig();
+                sendMessage(player, "&f温泉名を&b" + args[1] + "でリクエストを送信しました");
+                for (Player admin : Bukkit.getOnlinePlayers()) {
+                    if (admin.hasPermission("onsen.admin")) {
+                        sendMessage(admin, "&d" + player.getName() + "&fが&b" + args[1] + "&fの温泉登録リクエストを申請しました");
+                        return true;
+                    }
+                }
+                return true;
+            }
+            if (args.length == 4) {
+                String path = "OnsenList." + args[1];
+                String description = args[2];
+                String itemID = args[3];
+                if (onsenConfig.contains(path)) {
+                    sendMessage(player, "&b" + args[1] + "&fという名前の温泉は既に登録されています");
+                    return true;
+                }
+                onsenConfig.set(path + ".Player", player.getUniqueId().toString());
+                onsenConfig.set(path + ".Description", description);
+                onsenConfig.set(path + ".ItemID", itemID);
+                onsenConfig.set(path + ".Status", "unrated");
+                onsenConfig.set(path + ".World", player.getWorld().getName());
+                onsenConfig.set(path + ".X", player.getLocation().getBlockX());
+                onsenConfig.set(path + ".Y", player.getLocation().getBlockY());
+                onsenConfig.set(path + ".Z", player.getLocation().getBlockZ());
+                onsenConfig.set(path + ".Yaw", player.getLocation().getYaw());
+                onsenConfig.set(path + ".Pitch", player.getLocation().getPitch());
+                plugin.saveOnsenConfig();
+                sendMessage(player, "&f温泉名を&b" + args[1] + "でリクエストを送信しました");
                 for (Player admin : Bukkit.getOnlinePlayers()) {
                     if (admin.hasPermission("onsen.admin")) {
                         sendMessage(admin, "&d" + player.getName() + "&fが&b" + args[1] + "&fの温泉登録リクエストを申請しました");

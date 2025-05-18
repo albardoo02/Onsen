@@ -10,8 +10,8 @@
 # X: X座標
 # Y: Y座標
 # X: X座標
-# Yaw: 垂直方向
-# Pitch: 水平方向
+# Yaw: 水平方向
+# Pitch: 垂直方向
 OnsenList:
   #デフォルトの温泉街
   温泉街:

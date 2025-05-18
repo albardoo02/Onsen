@@ -36,6 +36,7 @@ public class OnsenCommandTabCompleter implements TabCompleter {
         if (args.length == 1) {
             completions.add("help");
             completions.add("menu");
+            completions.add("wiki");
             completions.add("spawn");
             completions.add("teleport");
             completions.add("tp");
@@ -79,7 +80,7 @@ public class OnsenCommandTabCompleter implements TabCompleter {
                 return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
             else if (args[0].equalsIgnoreCase("request")) {
-                completions.add("<設定したい温泉名>");
+                completions.add("<リクエストする温泉名>");
                 return StringUtil.copyPartialMatches(args[1], completions, new ArrayList<>());
             }
             else if (args[0].equalsIgnoreCase("requests")) {
@@ -117,6 +118,10 @@ public class OnsenCommandTabCompleter implements TabCompleter {
             }
         }
         else if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("request")) {
+                completions.add("<温泉の説明文>");
+                return StringUtil.copyPartialMatches(args[2], completions, new ArrayList<>());
+            }
             if (args[1].equalsIgnoreCase("public")) {
                 ConfigurationSection onsenListSection = onsenConfig.getConfigurationSection("OnsenList");
                 if (onsenListSection != null) {
@@ -178,7 +183,13 @@ public class OnsenCommandTabCompleter implements TabCompleter {
             }
         }
         else if (args.length == 4) {
-            if (args[2].equalsIgnoreCase(args[2])) {
+            if (args[0].equalsIgnoreCase("request")) {
+                String input = args[3].toLowerCase();
+                return itemId.stream()
+                        .filter(id -> id.toLowerCase().startsWith(input))
+                        .collect(Collectors.toList());
+            }
+            if (!args[0].equalsIgnoreCase("request")) {
                 ConfigurationSection onsenListSection = onsenConfig.getConfigurationSection("OnsenList");
                 if (onsenListSection != null) {
                     Set<String> onsens = onsenListSection.getKeys(false);
