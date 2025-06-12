@@ -53,7 +53,7 @@ public class OnsenCommandExecutor implements CommandExecutor {
 
         if (args.length == 0) {
             sendMessage(player, "&6温泉プラグイン");
-            player.sendMessage("詳しくは/helpもしくはWikiを確認してね！");
+            player.sendMessage("詳しくは/wiki helpもしくはWikiを確認してね！");
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("WikiURL")));
             return true;
         }
